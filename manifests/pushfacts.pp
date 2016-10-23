@@ -11,7 +11,7 @@ class pushfacts(
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => "org_email=$org_email\norg_group=$org_group\ntier=$tier\npurpose=$purpose\n",
+      content => template('elbase/push.txt'),
       require => File['/etc/puppetlabs/facter/facts.d'],
   }
 
