@@ -11,8 +11,6 @@ class elbase::sysctls {
     'base-sysctl-conf':
       context => '/files/etc/sysctl.conf',
       changes => [
-        'set kernel.randomize_va_space 2',
-        'set net.ipv4.ip_forward 0',
         'set net.ipv6.conf.all.disable_ipv6 1',
         'set net.ipv6.conf.default.disable_ipv6 1',
         'set net.ipv4.conf.all.send_redirects 0',
@@ -33,4 +31,6 @@ class elbase::sysctls {
       ],
       notify => Exec['sysctl-restart'];
   }
+        #'set kernel.randomize_va_space 2',
+        #'set net.ipv4.ip_forward 0',
 }
