@@ -1,5 +1,13 @@
 class elbase {
-# RHEL / CentOS misc profile
+# RHEL / CentOS misc profile mainly for EL7
+#
+# add some basic packages and remove some we don't use
+# disable ipv6 bits: netconfig, clean /etc/hosts
+# tidy /etc/skel
+# shut rsyslogd up about slices and session
+# fix permissions on unit files from packages shipped with EL to remove warnings
+# don't run kdump 
+# make sure rsyslog is running
 
   package {
     # INSTALL:
@@ -13,6 +21,7 @@ class elbase {
     'augeas': ensure => latest;
     'scl-utils': ensure => latest;
     'dmidecode': ensure => latest;
+    'sg3_utils': ensure => latest;
 
     # REMOVE:
     'teamd': ensure => absent;
@@ -38,7 +47,6 @@ class elbase {
   }
 
   if $::operatingsystemmajrelease + 0 >= 7 {
-
 
     file {
     # shut stupid systemd messages up

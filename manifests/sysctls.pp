@@ -7,30 +7,27 @@ class elbase::sysctls {
       refreshonly => true;
   }
 
-  augeas {
-    'base-sysctl-conf':
-      context => '/files/etc/sysctl.conf',
-      changes => [
-        'set net.ipv6.conf.all.disable_ipv6 1',
-        'set net.ipv6.conf.default.disable_ipv6 1',
-        'set net.ipv4.conf.all.send_redirects 0',
-        'set net.ipv4.conf.all.accept_redirects 0',
-        'set net.ipv4.conf.all.secure_redirects 0',
-        'set net.ipv4.conf.all.accept_source_route 0',
-        'set net.ipv4.conf.all.log_martians 0',
-        'set net.ipv4.conf.all.rp_filter 1',
-        'set net.ipv4.conf.default.send_redirects 0',
-        'set net.ipv4.conf.default.accept_redirects 0',
-        'set net.ipv4.conf.default.secure_redirects 0',
-        'set net.ipv4.conf.default.accept_source_route 0',
-        'set net.ipv4.conf.default.log_martians 0',
-        'set net.ipv4.conf.default.rp_filter 1',
-        'set net.ipv4.icmp_echo_ignore_broadcasts 1',
-        'set net.ipv4.icmp_ignore_bogus_error_responses 1',
-        'set net.ipv4.tcp_syncookies 1',
-      ],
+  file {
+    '/etc/sysctl.d/disable_ipv6.conf':
+      ensure  => file,
+      source  => 'puppet:///modules/elbase/disable_ipv6_sysctl.conf',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      notify => Exec['sysctl-restart'];
+    '/etc/sysctl.d/enable_ipv4_forward.conf':
+      ensure  => file,
+      source  => 'puppet:///modules/elbase/enable_ipv4forward_sysctl.conf',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      notify => Exec['sysctl-restart'];
+    '/etc/sysctl.d/ipv4_secure.conf':
+      ensure  => file,
+      source  => 'puppet:///modules/elbase/ipv4_secure_sysctl.conf',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
       notify => Exec['sysctl-restart'];
   }
-        #'set kernel.randomize_va_space 2',
-        #'set net.ipv4.ip_forward 0',
 }
