@@ -19,7 +19,7 @@ class pushfacts(
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template('elbase/pushfacts.txt'),
+      content => template('pushfacts/push.txt'),
       require => File['/etc/puppetlabs/facter/facts.d'],
   }
 
