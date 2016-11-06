@@ -19,7 +19,7 @@ class pushfacts(
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template('pushfacts/push.txt'),
+      content => template('pushfacts/push.txt.erb'),
       require => File['/etc/puppetlabs/facter/facts.d'],
   }
 
