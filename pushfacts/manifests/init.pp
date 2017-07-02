@@ -1,10 +1,3 @@
-class pushfacts(
-  String $purpose,
-  String $tier,
-  String $org_email,
-  String $org_group,
-) {
-#
 # This class pushes facts typically populated into this class from hiera to a node.
 # Then on future node puppet runs, these facts are available.
 # Useful for "pushing" data from puppet master to client
@@ -12,6 +5,12 @@ class pushfacts(
 # Pro: can also be used in shell scripts by sourcing the file
 #
 # Ref: https://docs.puppet.com/facter/3.4/custom_facts.html#structured-data-facts
+class pushfacts(
+  String $purpose,
+  String $tier,
+  String $org_email,
+  String $org_group,
+) {
 
   file {
     '/etc/puppetlabs/facter/facts.d/push.txt':
