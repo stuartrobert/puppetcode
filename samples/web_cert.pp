@@ -27,11 +27,15 @@ class web_cert(
     $req_ext = false
   }
   
+  export_csr { 'common.example.com':
+    key => 'text of CSR goes here',
+  }
+
   # So we already have a private key, we need to generate a CSR
   # that is exported for our CA to sign and "return" to us.
-  x509_request { "export_${common_name}.csr":
+  x509_request { "${common_name}.csr":
     ensure      => 'present',
-    private_key => $key_file,  # realised this is not going to export the CONTENT, just the pointer :-(
+    private_key => $key_file,
     encrypted   => false,
     
   }
