@@ -1,17 +1,18 @@
 # example code for a server to generate key and csr
 # using code from camptocamp/openssl module
-class web_cert(
-  String               $priv_key_text,
+class web_client_example(
+  String               $priv_key_text, # we want our private key coming in via yaml in order to use eyaml
   String               $common_name,
   Array[String]        $altnames,
-  Array[String]        $extkeyusage,
-  Stdlib::Absolutepath $csr_dir = $ca_params::csr_dir,
-  Stdlib::Absolutepath $crt_dir = $ca_params::crt_dir,
-) inherits ca_params {
+  Array[String]        $extkeyusage, # see https://github.com/camptocamp/puppet-openssl/blob/master/manifests/certificate/x509.pp
+                                     # for valid values
+  Stdlib::Absolutepath $csr_dir = '/etc/pki/tls/csr',
+  Stdlib::Absolutepath $crt_dir = '/etc/pki/tls/crt',
+  Stdlib::Absolutepath $key_dir = '/etc/pki/tls/private',
+) {
 
   # define where we are putting our private keys
-  $key_dir = '/etc/pki/tls/private'
-  $key_file = "${key_dir}/${common_name},key"
+  $key_file = "${key_dir}/${common_name}.key"
 
   file { $key_file:
     ensure  => 'file',
