@@ -1,9 +1,15 @@
 # example code for a server to generate key and csr
 # using code from camptocamp/openssl module
-class web_client_example(
+class certs_to_sign::web_client_example(
   String               $priv_key_text, # we want our private key coming in via yaml in order to use eyaml
   String               $common_name,
   Array[String]        $altnames,
+  String               $email = '',
+  String               $orgunit = 'IT Services',
+  String               $organisation = 'Best Place',
+  String               $locality = 'Brisbane',
+  String               $state = 'Queensland',
+  String               $country = 'AU',
   Array[String]        $extkeyusage, # see https://github.com/camptocamp/puppet-openssl/blob/master/manifests/certificate/x509.pp
                                      # for valid values
   Stdlib::Absolutepath $csr_dir = '/etc/pki/tls/csr',
@@ -22,22 +28,28 @@ class web_client_example(
     group   => 'root',
   }
 
+  # configure var for openssl.conf file
   if !empty($altnames+$extkeyusage) {
     $req_ext = true
   } else {
     $req_ext = false
   }
-  
-  export_csr { 'common.example.com':
-    key => 'text of CSR goes here',
+
+  # write out our openssl.conf for this CSR
+  file { "${csr_dir}/${common_name}-openssl.conf":
+    ensure  => 'file',
+    content => template('certs_to_sign/openssl.conf.erb'),
   }
 
   # So we already have a private key, we need to generate a CSR
   # that is exported for our CA to sign and "return" to us.
-  x509_request { "${common_name}.csr":
+  x509_request { "${csr_dir}/${common_name}.csr":
     ensure      => 'present',
     private_key => $key_file,
+    template    => 'certs_to_sign/openssl.conf.erb',
     encrypted   => false,
-    
+    force       => false,
   }
+
+  # now collect the fact....
 }
