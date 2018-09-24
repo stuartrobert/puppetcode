@@ -4,6 +4,7 @@
 define certs_to_sign::x509_csr(
   String               $csr,
   Stdlib::Absolutepath $cpath = '/var/www/html/certs',
+  String               $sign_exec = '/root/sign_csr.sh',
 ) {
 
   # puppetlabs/stdlib provides a base64 decode function - yay!
@@ -15,6 +16,6 @@ define certs_to_sign::x509_csr(
     ensure  => 'file',
     mode    => '0644',
     content => $real_csr,
-    notify  => Exec['sign_csr.sh'],
+    notify  => Exec[$sign_exec],
   }
 }
