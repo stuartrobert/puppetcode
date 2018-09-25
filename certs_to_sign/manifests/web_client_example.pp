@@ -1,17 +1,21 @@
-# example code for a server to generate key and csr
+# type to drop a key and make a csr
 # using code from camptocamp/openssl module
-class certs_to_sign::web_client_example(
+define certs_to_sign::make_csr(
   String               $priv_key_text, # we want our private key coming in via yaml in order to use eyaml
   String               $common_name,
-  Array[String]        $altnames,
-  String               $email = '',
+  Array[String]        $altnames = [],
+  # extkeyusage:  https://github.com/camptocamp/puppet-openssl/blob/master/manifests/certificate/x509.pp
+  # or man x509v3_config from openssl package for valid values
+  Array[String]        $extkeyusage = [
+    'serverAuth',
+    'clientAuth',
+  ],
+  String               $email = 'some_email@example.com',
   String               $orgunit = 'IT Services',
   String               $organisation = 'Best Place',
   String               $locality = 'Brisbane',
   String               $state = 'Queensland',
   String               $country = 'AU',
-  Array[String]        $extkeyusage = [], # see https://github.com/camptocamp/puppet-openssl/blob/master/manifests/certificate/x509.pp
-                                     # or man x509v3_config from openssl package for valid values
   Stdlib::Absolutepath $csr_dir = '/etc/pki/tls/csr',
   Stdlib::Absolutepath $crt_dir = '/etc/pki/tls/crt',
   Stdlib::Absolutepath $key_dir = '/etc/pki/tls/private',

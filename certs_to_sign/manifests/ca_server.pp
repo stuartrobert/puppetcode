@@ -1,14 +1,20 @@
 # this class goes on the server running the CA
-class profile::ca_server(
+class cert_to_sign::ca_server(
 ) {
 
   # instantiate all CSRs in the appropriate place
   Certs_to_sign::X509_csr <<| |>>
 
-  exec { 'sign_csr.sh':
-    cwd         => '/var/www/html/public',
-    command     => '/bin/openssl ca blah blah',
-    refreshonly => true,
+  file { '/root/sign_csr.sh':
+    ensure => 'file',
+    source => 'puppet:///modules/cert_to_sign/sign_csr.sh',
+    mode   => '0700',
+    owner  => 'root',
+    group  => 'root',
   }
 
+  exec { '/root/sign_csr.sh':
+    command     => '/var/www/html/certs',
+    refreshonly => true,
+  }
 }
