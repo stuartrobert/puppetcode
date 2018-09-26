@@ -42,7 +42,7 @@ define certs_to_sign::make_csr(
   # write out our openssl.conf for this CSR
   file { "${csr_dir}/${common_name}-openssl.conf":
     ensure  => 'file',
-    content => template('certs_to_sign/openssl.conf.erb'),
+    content => template("${module_name}/openssl.conf.erb"),
   }
 
   # So we already have a private key, we need to generate a CSR
@@ -50,7 +50,7 @@ define certs_to_sign::make_csr(
   x509_request { "${csr_dir}/${common_name}.csr":
     ensure      => 'present',
     private_key => $key_file,
-    template    => 'certs_to_sign/openssl.conf.erb',
+    template    => "${module_name}/openssl.conf.erb",
     encrypted   => false,
     force       => false,
   }
@@ -58,7 +58,7 @@ define certs_to_sign::make_csr(
   # grab the CSRs that have been converted to facts by the next run
   # so that we can export the resources
   if defined($facts['x509_csrs']) {
-    create_resources(certs_to_sign::x509_csr, $facts['x509_csrs'])
+    create_resources($module_name::x509_csr, $facts['x509_csrs'])
   }
 }
 
