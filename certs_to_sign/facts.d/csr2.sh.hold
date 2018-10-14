@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo '{'
+echo '  "x509_csrs_2": {'
+for fn in `find /etc/pki/tls/csr -name '*.csr' -type f` ; do
+  key=$(basename $fn | sed 's/\.csr$//')
+  echo '    "'$key'": {'
+  echo '      "csr": "TEST:'"$(cat $fn)"'",'
+  echo '    },'
+done
+echo '  }'
+echo '}'

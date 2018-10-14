@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo '{'
+echo '  "x509_certs": {'
+for fn in `find /etc/pki/tls/certs -name '*.crt' -type f` ; do
+  key=`basename $fn | sed 's/\.crt$//'`
+  value=`cat $fn | base64 -w 0`
+  echo '    "'$key'": {'
+  echo '      "crt": "'$value'",'
+  echo '    },'
+done
+echo '  }'
+echo '}'
